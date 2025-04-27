@@ -27,6 +27,11 @@ public class TeamController {
         return new ResponseEntity<>(teamService.createTeam(teamRequest), HttpStatus.CREATED);
     }
     
+    @PostMapping("update-team/{teamId}/{name}")
+    public ResponseEntity<?> createTeam(@PathVariable Long teamId, @PathVariable String name){
+        return new ResponseEntity<>(teamService.editTeam(teamId,name), HttpStatus.CREATED);
+    }
+    
     @GetMapping("/team/{teamId}/users")
     public ResponseEntity<List<TeamUserResponse>> getTeamUsers(@PathVariable Long teamId) {
         return ResponseEntity.ok(teamService.getTeamUsers(teamId));

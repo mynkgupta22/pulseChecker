@@ -1,14 +1,15 @@
 package com.misogi.pulseChecker.service.impl;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.misogi.pulseChecker.api.request.ActivityRequest;
+import com.misogi.pulseChecker.api.response.ActivityResponse;
 import com.misogi.pulseChecker.common.DateTimeUtil;
 import com.misogi.pulseChecker.exception.BadRequestException;
 import com.misogi.pulseChecker.model.Activity;
@@ -35,12 +36,13 @@ public class ActivityServiceImpl implements IActivityService {
 
     @Override
     @Transactional
-    public Activity addActivity(ActivityRequest request) {
+    public ActivityResponse addActivity(ActivityRequest request) {
         Team team = teamRepository.findById(request.getTeamId())
             .orElseThrow(() -> new BadRequestException("Team not found"));
         
         // Validate user exists if provided
         User user = contextService.getCurrentUser();
+        LocalDateTime currentDateTime = DateTimeUtil.getCurrentLocalDateTime();
      
             if (!teamUserRepository.existsByUserAndTeam(user, team)) {
                 throw new BadRequestException("User does not belong to the specified team");
@@ -53,33 +55,56 @@ public class ActivityServiceImpl implements IActivityService {
             .description(request.getDescription())
             .team(team)
             .user(user)
-            .timestamp(LocalDateTime.now())
+            .timestamp(currentDateTime)
             .build();
             
-        return activityRepository.save(activity);
+        activity = activityRepository.save(activity);
+        return activityResponseMapper(activity);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Activity> getTeamActivities(Long teamId, String startDate, String endDate) {
+    public List<ActivityResponse> getTeamActivities(Long teamId, String startDate, String endDate) {
         Team team = teamRepository.findById(teamId)
             .orElseThrow(() -> new BadRequestException("Team not found"));
         LocalDateTime startDateTime = DateTimeUtil.getLocalDate(startDate).atStartOfDay();
         LocalDateTime endDateTime = DateTimeUtil.getLocalDate(endDate).atTime(LocalTime.MAX);
 
-        return activityRepository.findByTeamAndTimestampBetween(team, startDateTime, endDateTime);
+        List<Activity> activityList= activityRepository.findByTeamAndTimestampBetween(team, startDateTime, endDateTime);
+        List<ActivityResponse> activityResponseList = new ArrayList<>();
+        for(Activity activity:activityList) {
+        
+        	activityResponseList.add(activityResponseMapper(activity));
+        }
+        return activityResponseList;
+    }
+    
+    private ActivityResponse activityResponseMapper(Activity activity) {
+    	ActivityResponse activityResponse = new ActivityResponse();
+    	activityResponse.setDescription(activity.getDescription());
+    	activityResponse.setTeamName(activity.getTeam().getName());
+    	activityResponse.setType(activity.getType());
+    	activityResponse.setId(activity.getId());
+    	activityResponse.setTimestamp(DateTimeUtil.getDateTimeString(activity.getTimestamp()));
+    	return activityResponse;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Activity> getUserActivities(Long userId, String startDate, String endDate) {
+    public List<ActivityResponse> getUserActivities(Long userId, String startDate, String endDate) {
     	 User user = null;
     	if(userId == null)
-    		contextService.getCurrentUser();
+    		user = contextService.getCurrentUser();
     	else
     		user = userRepository.findById(userId).get();
         LocalDateTime startDateTime = DateTimeUtil.getLocalDate(startDate).atStartOfDay();
         LocalDateTime endDateTime = DateTimeUtil.getLocalDate(endDate).atTime(LocalTime.MAX);  
-        return activityRepository.findByUserAndTimestampBetween(user, startDateTime, endDateTime);
+        List<Activity> activityList=  activityRepository.findByUserAndTimestampBetween(user, startDateTime, endDateTime);
+        List<ActivityResponse> activityResponseList = new ArrayList<>();
+        for(Activity activity:activityList) {
+        
+        	activityResponseList.add(activityResponseMapper(activity));
+        }
+        return activityResponseList;
     }
 }
