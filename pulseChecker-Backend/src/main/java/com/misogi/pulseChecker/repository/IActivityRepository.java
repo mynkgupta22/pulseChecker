@@ -15,4 +15,9 @@ public interface IActivityRepository extends JpaRepository<Activity, Long>{
 
 	List<Activity> findByUserAndTimestampBetween(User user, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
+	List<Activity> findAllByTeamAndTimestampBetween(Team team, LocalDateTime startDateTime, LocalDateTime endDateTime);
+
+	List<Activity> findAllByUserAndTeamAndTimestampBetween(User user, Team team, LocalDateTime startDateTime,
+			LocalDateTime endDateTime);
+
 }

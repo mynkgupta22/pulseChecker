@@ -85,6 +85,7 @@ public class TeamServiceImpl implements ITeamService{
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
+                .userId(user.getId())
                 .build();
             responseList.add(response);
         }

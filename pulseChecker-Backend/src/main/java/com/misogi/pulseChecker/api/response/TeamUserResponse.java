@@ -13,4 +13,5 @@ public class TeamUserResponse {
     private String firstName;
     private String lastName;
     private String email;
+    private Long userId;
 }
