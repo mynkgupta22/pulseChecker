@@ -20,6 +20,7 @@ jobs:
           java-version: '17'
 
       - name: 🧹 Build Spring Boot app using Maven 
+	working-directory: ./pulseChecker-Backend
         run: mvn clean install -DskipTests
 
       - name: 🐳 Login to Docker Hub
