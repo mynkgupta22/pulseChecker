@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
 
       - name: 🧹 Build Spring Boot app using Maven 
-        run: mvn clean install -DskipTests
+        run: mvn clean install -Pdev -DskipTests
 
       - name: 🐳 Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
