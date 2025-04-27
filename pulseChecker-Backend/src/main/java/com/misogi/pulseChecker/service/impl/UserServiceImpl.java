@@ -57,6 +57,7 @@ public class UserServiceImpl implements IUserService{
     	user.setRole(Role.ROLE_USER);
     	user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
     	user.setEnabled(true);
+    	user.setFirstLogin(true);
     	user.setCreatedAt(currentDateTime);
     	user.setUpdatedAt(currentDateTime);
     	userRepository.save(user);
