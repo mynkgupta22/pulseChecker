@@ -4,17 +4,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.misogi.pulseChecker.api.request.UserSignUpRequest;
+import com.misogi.pulseChecker.api.response.JwtAuthenticationResponse;
 import com.misogi.pulseChecker.api.response.UserDetailedResponse;
 import com.misogi.pulseChecker.common.DateTimeUtil;
+import com.misogi.pulseChecker.common.JwtTokenUtil;
 import com.misogi.pulseChecker.exception.BadRequestException;
 import com.misogi.pulseChecker.model.Role;
 import com.misogi.pulseChecker.model.Team;
 import com.misogi.pulseChecker.model.TeamUser;
 import com.misogi.pulseChecker.model.User;
+import com.misogi.pulseChecker.repository.ITeamRepository;
 import com.misogi.pulseChecker.repository.ITeamUserRepository;
 import com.misogi.pulseChecker.repository.IUserRepository;
 import com.misogi.pulseChecker.service.IContextService;
@@ -33,9 +37,13 @@ public class UserServiceImpl implements IUserService{
     private final ITeamUserRepository teamUserRepository;
     
     private final IContextService contextService;
+    
+    private final JwtTokenUtil jwtTokenUtil;
+    
+    private final ITeamRepository teamRepository;
 	
     @Override
-	public String createUser(UserSignUpRequest userRequest) {
+	public JwtAuthenticationResponse createUser(UserSignUpRequest userRequest) {
     	LocalDateTime currentDateTime = DateTimeUtil.getCurrentLocalDateTime();
 
     	if (userRepository.existsByEmailAndIsDeletedFalse(userRequest.getEmail())) {
@@ -52,8 +60,10 @@ public class UserServiceImpl implements IUserService{
     	user.setCreatedAt(currentDateTime);
     	user.setUpdatedAt(currentDateTime);
     	userRepository.save(user);
-    	return "User Sign Up Successfully.";
-	}
+    	 return new
+                 JwtAuthenticationResponse(user.getId(),jwtTokenUtil.generateToken(user),true);	
+    	 
+    }
     
     @Override
     public List<UserDetailedResponse> getAllDetails(){
@@ -70,6 +80,20 @@ public class UserServiceImpl implements IUserService{
     		userDetailsResponseList.add(userDetailedResponse);
     	}
     	return userDetailsResponseList;
+    }
+    
+    @Override
+    public String removeUser(Long userId,Long teamId) {
+    	User user = contextService.getCurrentUser();
+    	Team team = teamRepository.findById(teamId).get();
+    	TeamUser teamUser = teamUserRepository.findByUserAndTeam(user,team);
+    	User removeUser = userRepository.findById(teamId).get();
+    	if(teamUser != null && teamUser.isCreator() && teamUserRepository.existsByUserAndTeam(removeUser, team)) {
+    		teamUserRepository.deleteByUserAndTeam(removeUser,team);
+    		return "User Removed Successfully.";
+    	}
+		return "User Cannot Removed.";
+
     }
 
 }

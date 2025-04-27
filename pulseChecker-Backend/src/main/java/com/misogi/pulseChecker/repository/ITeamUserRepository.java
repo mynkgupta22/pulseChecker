@@ -1,6 +1,7 @@
 package com.misogi.pulseChecker.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,5 +14,15 @@ public interface ITeamUserRepository extends JpaRepository<TeamUser, Long>{
 	boolean existsByUserAndIsCreatorTrueAndTeam(User user, Team team);
 
 	List<TeamUser> findAllByUser(User user);
+
+	boolean existsByUserAndTeam(User user, Team team);
+
+	Optional<Team> findByTeam(Team team);
+
+	List<TeamUser> findAllByTeam(Team team);
+
+	TeamUser findByUserAndTeam(User user, Team team);
+
+	void deleteByUserAndTeam(User removeUser, Team team);
 
 }
