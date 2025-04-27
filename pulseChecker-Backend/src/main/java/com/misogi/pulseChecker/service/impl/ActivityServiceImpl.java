@@ -86,6 +86,9 @@ public class ActivityServiceImpl implements IActivityService {
     	activityResponse.setType(activity.getType());
     	activityResponse.setId(activity.getId());
     	activityResponse.setTimestamp(DateTimeUtil.getDateTimeString(activity.getTimestamp()));
+    	activityResponse.setEmail(activity.getUser().getEmail());
+    	activityResponse.setFirstName(activity.getUser().getFirstName());
+    	activityResponse.setLastName(activity.getUser().getLastName());
     	return activityResponse;
     }
 

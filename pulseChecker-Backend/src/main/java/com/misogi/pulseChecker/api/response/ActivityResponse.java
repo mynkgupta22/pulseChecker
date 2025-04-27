@@ -16,5 +16,8 @@ public class ActivityResponse {
     private String timestamp;
     private ActivityType type;
     private String teamName;
+    private String firstName;
+    private String lastName;
+    private String email;
 
 }

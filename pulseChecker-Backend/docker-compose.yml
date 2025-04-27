@@ -24,9 +24,7 @@ services:
       - backend
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: mynkgupta22/pulse-checker-backend-app:latest
     container_name: misogi-ai
     ports:
       - "8082:8080"  # host:container

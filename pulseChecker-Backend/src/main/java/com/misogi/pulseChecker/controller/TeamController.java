@@ -1,7 +1,5 @@
 package com.misogi.pulseChecker.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.misogi.pulseChecker.api.request.TeamRequest;
-import com.misogi.pulseChecker.api.response.TeamUserResponse;
+import com.misogi.pulseChecker.api.response.TeamDetailResponse;
 import com.misogi.pulseChecker.service.ITeamService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,7 +31,7 @@ public class TeamController {
     }
     
     @GetMapping("/team/{teamId}/users")
-    public ResponseEntity<List<TeamUserResponse>> getTeamUsers(@PathVariable Long teamId) {
+    public ResponseEntity<TeamDetailResponse> getTeamUsers(@PathVariable Long teamId) {
         return ResponseEntity.ok(teamService.getTeamUsers(teamId));
     }
 }

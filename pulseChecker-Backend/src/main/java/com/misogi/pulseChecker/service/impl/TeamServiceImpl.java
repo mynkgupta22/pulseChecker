@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.misogi.pulseChecker.api.request.TeamRequest;
+import com.misogi.pulseChecker.api.response.TeamDetailResponse;
 import com.misogi.pulseChecker.api.response.TeamUserResponse;
 import com.misogi.pulseChecker.common.DateTimeUtil;
 import com.misogi.pulseChecker.exception.BadRequestException;
@@ -67,11 +68,15 @@ public class TeamServiceImpl implements ITeamService{
     
     @Override
     @Transactional(readOnly = true)
-    public List<TeamUserResponse> getTeamUsers(Long teamId) {
+    public TeamDetailResponse getTeamUsers(Long teamId) {
         Team team = teamRepository.findById(teamId)
             .orElseThrow(() -> new BadRequestException("Team not found"));
         List<TeamUser> teamUsers = teamUserRepository.findAllByTeam(team);
-  
+        int totalUserCount =teamUsers.size();
+        TeamDetailResponse teamDetailResponse = new TeamDetailResponse();
+        teamDetailResponse.setTeamId(team.getId());
+        teamDetailResponse.setTeamName(team.getName());
+        teamDetailResponse.setTotalUserCount(totalUserCount);
         List<TeamUserResponse> responseList = new ArrayList<>();
 
         for (TeamUser teamUser : teamUsers) {
@@ -84,7 +89,8 @@ public class TeamServiceImpl implements ITeamService{
             responseList.add(response);
         }
 
-        return responseList;
+       teamDetailResponse.setTeamUserResponseList(responseList); 
+       return teamDetailResponse;
     }
     
     @Override
