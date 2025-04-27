@@ -1,5 +1,7 @@
 package com.misogi.pulseChecker.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -33,9 +35,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
     
     @Column(columnDefinition = "boolean default true ")
     private boolean enabled;
@@ -46,7 +45,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+    
+    @Column(columnDefinition = "boolean default true ")
+    private boolean firstLogin;
 
     @Column(nullable = false)
-    private String name;
+    private String firstName;
+    
+    @Column(nullable = false)
+    private String lastName;
+    
+    private LocalDateTime createdAt;
+    
+    private LocalDateTime updatedAt;
 }

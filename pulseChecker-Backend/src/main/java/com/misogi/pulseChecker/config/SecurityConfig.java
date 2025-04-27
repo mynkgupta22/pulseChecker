@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URLS = {
-        "/register-company",
         "/authenticate",
         "/swagger-ui/**",
         "/v3/api-docs/**",
@@ -47,7 +46,7 @@ public class SecurityConfig {
           .authorizeRequests(auth -> auth
               // public endpoints
               .requestMatchers(WHITE_LIST_URLS).permitAll()
-              .requestMatchers(HttpMethod.POST, "/users/create-user").permitAll()
+              .requestMatchers(HttpMethod.POST, "/users/add-user").permitAll()
               .requestMatchers("/error").permitAll()
               // everything else needs auth
               .anyRequest().authenticated()

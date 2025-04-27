@@ -24,7 +24,7 @@ public class JwtTokenUtil {
     private IBlackListTokenRepository blackListTokenRepository;
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
-    private static final long jwtExpirationMs = 1000;
+    private static final long jwtExpirationMs = 7 * 24 * 1000 * 60 * 60;
     private static final String secret = "NyHnbBw84RGC6sO565pVriPWqNaw0dc4DVbzigpnoMBAFi6cbU/xsGniO1eLUjOJU9hA8wLzHsw1/gRmkIDHMlgnP7F+RQxMBt/6cawr3x+YvzAhn3ZFEWzcuD/3dV8aykV09qd99zQ3Z13uwUjlo8odhklvOK99aA5fMasBL1aJHfE3xhEwH27ytgHWm1LsBFGz8A7LJAWwKDQIShc4WnqJbhQ4URHZoqpDXm5orDOhO41vEkTWQrKSXcf3zr7Rmi1Buw7t0TeTaMpganpWtQQEM3iitKXEB/yLj4Z+NLvcA3PmLHbNColC4MOTHW2LrcKAfsN9uoq9BP4abjEA/IvKWihyydLPy1GcsemWO4I=";
 
     private String doGenerateToken(Map<String,Object> claims, String subject){
@@ -75,11 +75,18 @@ public class JwtTokenUtil {
     }
 
 
-    public String generateToken(User user, String teamId) {
+    public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("teamId",teamId);
         claims.put("userId",user.getId());
         claims.put("role", user.getRole());
         return doGenerateToken(claims, user.getEmail());
     }
+
+
+//	public Long getTeamFromToken(String jwt) {
+//		 final Claims claims = getAllClaimsFromToken(jwt);
+//		    Object teamId = claims.get("teamId");
+//		    return teamId instanceof Number ? ((Number) teamId).longValue() : null;
+//	}
+	
 }

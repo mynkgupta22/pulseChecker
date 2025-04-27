@@ -6,4 +6,6 @@ import com.misogi.pulseChecker.model.Team;
 
 public interface ITeamRepository extends JpaRepository<Team, Long>{
 
+	boolean existsByName(String teamName);
+
 }

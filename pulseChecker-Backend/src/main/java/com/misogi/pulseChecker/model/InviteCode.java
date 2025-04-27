@@ -1,5 +1,7 @@
 package com.misogi.pulseChecker.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,17 +21,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class InviteCode {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	    @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String code;
+	    @Column(nullable = false, unique = true)
+	    private String code;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
+	    @ManyToOne(fetch = FetchType.LAZY)
+	    @JoinColumn(name = "team_id")
+	    private Team team;
 
-    @Column(nullable = false)
-    private boolean used;
-}
+	    @Column(nullable = false)
+	    private String invitedEmail;
+
+	    @Column(nullable = false)
+	    private boolean used;
+
+	    @Column(nullable = false)
+	    private LocalDateTime createdAt;
+
+	    @Column(nullable = false)
+	    private LocalDateTime expiresAt;
+	}
