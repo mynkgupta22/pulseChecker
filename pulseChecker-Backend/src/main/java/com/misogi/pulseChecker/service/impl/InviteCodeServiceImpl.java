@@ -70,7 +70,7 @@ public class InviteCodeServiceImpl implements IInviteCodeService{
 		if(!teamUserRepository.existsByUserAndIsCreatorTrueAndTeam(user,team))
 			throw new BadRequestException("Only Creator Can Invite For The Team.");
 		List<InviteCode> invitedCodeList = new ArrayList<>();
-			for(String email:inviteUserRequest.getUsersEmail()) {
+			for(String email:inviteUserRequest.getEmails()) {
 				InviteCode inviteCode = new InviteCode();
 				inviteCode.setUsed(false);
 				inviteCode.setCode(UUID.randomUUID().toString());

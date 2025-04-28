@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InviteUsersRequest {
 	
-	private List<String> usersEmail;
-	private Long teamId;
+	private List<String> emails;
 
 }
