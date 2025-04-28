@@ -206,3 +206,6 @@ Notification system for alerts on team activity trends
 User-driven performance benchmarks
 
 Note: Only the team creator can remove members or rename the team. All visualizations and activity views are scoped to the user's team context.
+# Credentials for mock data checking:-
+   email - mayankmk22@gmail.com
+   password - Mayank@123
