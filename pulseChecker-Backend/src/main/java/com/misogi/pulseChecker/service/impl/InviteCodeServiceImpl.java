@@ -62,15 +62,15 @@ public class InviteCodeServiceImpl implements IInviteCodeService{
 	}
 	
 	@Override
-	public String inviteUsers(InviteUsersRequest inviteUserRequest) {
+	public String inviteUsers(Long teamId,InviteUsersRequest inviteUserRequest) {
 		User user = contextService.getCurrentUser();
-		Team team = teamRepository.findById(inviteUserRequest.getTeamId()).get();
+		Team team = teamRepository.findById(teamId).get();
 		LocalDateTime currentDateTime = DateTimeUtil.getCurrentLocalDateTime();
 		LocalDateTime expireTime = DateTimeUtil.getCurrentLocalDateTime().plusDays(30);
-		if(teamUserRepository.existsByUserAndIsCreatorTrueAndTeam(user,team))
+		if(!teamUserRepository.existsByUserAndIsCreatorTrueAndTeam(user,team))
 			throw new BadRequestException("Only Creator Can Invite For The Team.");
 		List<InviteCode> invitedCodeList = new ArrayList<>();
-			for(String email:inviteUserRequest.getUsersEmail()) {
+			for(String email:inviteUserRequest.getEmails()) {
 				InviteCode inviteCode = new InviteCode();
 				inviteCode.setUsed(false);
 				inviteCode.setCode(UUID.randomUUID().toString());

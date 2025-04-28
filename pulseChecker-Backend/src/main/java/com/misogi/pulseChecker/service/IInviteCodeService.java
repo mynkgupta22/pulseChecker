@@ -6,6 +6,6 @@ public interface IInviteCodeService {
 
 	String joinTeam(String code);
 
-	String inviteUsers(InviteUsersRequest inviteUserRequest);
+	String inviteUsers(Long teamId, InviteUsersRequest inviteUserRequest);
 
 }
