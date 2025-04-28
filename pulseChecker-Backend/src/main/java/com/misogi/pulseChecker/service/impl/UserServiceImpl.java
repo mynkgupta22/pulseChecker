@@ -18,6 +18,7 @@ import com.misogi.pulseChecker.model.Role;
 import com.misogi.pulseChecker.model.Team;
 import com.misogi.pulseChecker.model.TeamUser;
 import com.misogi.pulseChecker.model.User;
+import com.misogi.pulseChecker.repository.IActivityRepository;
 import com.misogi.pulseChecker.repository.ITeamRepository;
 import com.misogi.pulseChecker.repository.ITeamUserRepository;
 import com.misogi.pulseChecker.repository.IUserRepository;
@@ -41,6 +42,8 @@ public class UserServiceImpl implements IUserService{
     private final JwtTokenUtil jwtTokenUtil;
     
     private final ITeamRepository teamRepository;
+    
+    private final IActivityRepository activityRepository;
 	
     @Override
 	public JwtAuthenticationResponse createUser(UserSignUpRequest userRequest) {
@@ -91,6 +94,7 @@ public class UserServiceImpl implements IUserService{
     	User removeUser = userRepository.findByEmail(email);
     	if(teamUser != null && teamUser.isCreator() && teamUserRepository.existsByUserAndTeam(removeUser, team)) {
     		teamUserRepository.deleteUserIdAndTeamId(removeUser.getId(),team.getId());
+    		activityRepository.deleteUserIdAndTeamId(removeUser.getId(),team.getId());
     		return "User Removed Successfully.";
     	}
 		return "User Cannot Removed.";

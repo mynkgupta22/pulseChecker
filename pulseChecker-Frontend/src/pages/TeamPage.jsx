@@ -107,11 +107,11 @@ const TeamPage = () => {
     setIsRemoving(true);
     try {
       await teamService.removeMember(teamId, memberToRemove.email);
-      toast.success("Member removed successfully");
       await fetchTeamUsers();
     } catch (error) {
+      // Let the interceptor handle the error toast
       console.error("Error removing team member:", error);
-      toast.error("Failed to remove team member");
+      throw error;
     } finally {
       setIsRemoving(false);
       setIsRemoveDialogOpen(false);
@@ -144,14 +144,12 @@ const TeamPage = () => {
     setIsSendingInvites(true);
     try {
       await teamService.inviteMembers(teamId, invitedEmails);
-      toast.success("Invites sent successfully");
       setInvitedEmails([]);
       setEmailInput("");
       setIsInviteModalOpen(false);
       await fetchTeamUsers();
     } catch (error) {
       console.error("Error sending invites:", error);
-      toast.error("Failed to send invites");
     } finally {
       setIsSendingInvites(false);
     }

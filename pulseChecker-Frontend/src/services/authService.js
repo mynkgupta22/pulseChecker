@@ -1,6 +1,7 @@
 import axios from "axios";
+import { toast } from "sonner";
 
-const API_URL = "https://pulsechecker.duckdns.org";// Update this with your Spring Boot backend URL
+const API_URL = "http://192.168.1.2:8081" ;// Update this with your Spring Boot backend URL
 
 // Create an axios instance with default config
 export const api = axios.create({
@@ -24,10 +25,28 @@ api.interceptors.request.use(
   }
 );
 
-// Add response interceptor to handle errors
+// Add response interceptor to handle messages and errors
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Handle success messages from the API
+    if (response.status === 200 && typeof response.data === 'string') {
+      // For direct string responses (success messages)
+      toast.success(response.data);
+    }
+    return response;
+  },
   (error) => {
+    // Handle error messages from the API
+    let errorMessage;
+    if (error.response?.data?.message) {
+      // For structured error responses
+      errorMessage = error.response.data.message;
+    } else {
+      // Fallback error message
+      errorMessage = error.message || 'An error occurred';
+    }
+    toast.error(errorMessage);
+    
     if (error.response?.status === 401) {
       localStorage.removeItem("user");
       window.location.href = "/login";

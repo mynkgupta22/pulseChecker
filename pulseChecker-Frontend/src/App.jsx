@@ -19,6 +19,7 @@ import PanelLayout from "./components/layout/PanelLayout";
 import LandingPage from "./pages/LandingPage";
 import AboutPage from "./pages/AboutPage";
 import { AuthProvider } from "./contexts/AuthContext";
+import { Toaster } from "sonner";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -35,6 +36,7 @@ const App = () => {
   return (
     <Router>
       <AuthProvider>
+        <Toaster richColors position="top-right" />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/home" element={<LandingPage />} />
