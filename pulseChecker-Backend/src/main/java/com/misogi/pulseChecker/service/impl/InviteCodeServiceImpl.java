@@ -62,9 +62,9 @@ public class InviteCodeServiceImpl implements IInviteCodeService{
 	}
 	
 	@Override
-	public String inviteUsers(InviteUsersRequest inviteUserRequest) {
+	public String inviteUsers(Long teamId,InviteUsersRequest inviteUserRequest) {
 		User user = contextService.getCurrentUser();
-		Team team = teamRepository.findById(inviteUserRequest.getTeamId()).get();
+		Team team = teamRepository.findById(teamId).get();
 		LocalDateTime currentDateTime = DateTimeUtil.getCurrentLocalDateTime();
 		LocalDateTime expireTime = DateTimeUtil.getCurrentLocalDateTime().plusDays(30);
 		if(teamUserRepository.existsByUserAndIsCreatorTrueAndTeam(user,team))

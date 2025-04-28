@@ -22,8 +22,8 @@ public class InviteController {
         return ResponseEntity.ok(inviteCodeService.joinTeam(inviteCode));
     }
     
-    @PostMapping("/invite-users")
-    public ResponseEntity<?> authenticate(@RequestBody InviteUsersRequest inviteUsersRequest){
-        return ResponseEntity.ok(inviteCodeService.inviteUsers(inviteUsersRequest));
+    @PostMapping("team/{teamId}/invite")
+    public ResponseEntity<?> authenticate(@PathVariable Long teamId, @RequestBody InviteUsersRequest inviteUsersRequest){
+        return ResponseEntity.ok(inviteCodeService.inviteUsers(teamId,inviteUsersRequest));
     }
 }
