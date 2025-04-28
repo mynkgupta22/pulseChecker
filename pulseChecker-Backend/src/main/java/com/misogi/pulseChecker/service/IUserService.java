@@ -12,6 +12,6 @@ public interface IUserService {
 
 	List<UserDetailedResponse> getAllDetails();
 
-	String removeUser(Long userId, Long teamId);
+	String removeUser(Long teamId, String email);
 
 }

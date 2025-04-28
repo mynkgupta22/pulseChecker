@@ -84,13 +84,13 @@ public class UserServiceImpl implements IUserService{
     }
     
     @Override
-    public String removeUser(Long userId,Long teamId) {
+    public String removeUser(Long teamId,String email) {
     	User user = contextService.getCurrentUser();
     	Team team = teamRepository.findById(teamId).get();
     	TeamUser teamUser = teamUserRepository.findByUserAndTeam(user,team);
-    	User removeUser = userRepository.findById(teamId).get();
+    	User removeUser = userRepository.findByEmail(email);
     	if(teamUser != null && teamUser.isCreator() && teamUserRepository.existsByUserAndTeam(removeUser, team)) {
-    		teamUserRepository.deleteByUserAndTeam(removeUser,team);
+    		teamUserRepository.deleteUserIdAndTeamId(removeUser.getId(),team.getId());
     		return "User Removed Successfully.";
     	}
 		return "User Cannot Removed.";

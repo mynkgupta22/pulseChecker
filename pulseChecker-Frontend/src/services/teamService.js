@@ -1,6 +1,6 @@
 import { api } from "./authService";
 
-const API_BASE_URL = "https://pulsechecker.duckdns.org";
+const API_BASE_URL = "http://192.168.1.2:8081";
 
 const teamService = {
   async createTeam(teamData) {

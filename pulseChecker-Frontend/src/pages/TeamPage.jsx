@@ -36,6 +36,29 @@ const TeamPage = () => {
   const [emailInput, setEmailInput] = useState("");
   const [isSendingInvites, setIsSendingInvites] = useState(false);
 
+  const [isTeamCreator, setIsTeamCreator] = useState(false);
+
+  const fetchTeamDetails = async () => {
+    try {
+      const teamDetailsResponse = await teamService.getTeamDetails();
+      console.log('Team Details Response:', teamDetailsResponse);
+      // The response might be an array of teams
+      const teams = Array.isArray(teamDetailsResponse) ? teamDetailsResponse : [teamDetailsResponse];
+      // Convert teamId from URL to number for comparison
+      const currentTeamId = parseInt(teamId, 10);
+      console.log('Current Team ID:', currentTeamId);
+      const teamDetails = teams.find(team => team.teamId === currentTeamId || team.id === currentTeamId);
+      console.log('Found Team Details:', teamDetails);
+      // Check all possible property names for team creator status
+      const isCreator = teamDetails?.creator || teamDetails?.teamCreator || teamDetails?.isTeamCreator || false;
+      console.log('Is Team Creator:', isCreator);
+      setIsTeamCreator(isCreator);
+    } catch (error) {
+      console.error("Error fetching team details:", error);
+      toast.error("Failed to load team details");
+    }
+  };
+
   const fetchTeamUsers = async () => {
     try {
       const response = await teamService.getTeamUsers(teamId);
@@ -59,6 +82,7 @@ const TeamPage = () => {
 
   useEffect(() => {
     fetchTeamUsers();
+    fetchTeamDetails();
   }, [teamId]);
 
   const handleRemoveClick = (member) => {
@@ -82,7 +106,7 @@ const TeamPage = () => {
 
     setIsRemoving(true);
     try {
-      await teamService.removeTeamUser(teamId, memberToRemove.email);
+      await teamService.removeMember(teamId, memberToRemove.email);
       toast.success("Member removed successfully");
       await fetchTeamUsers();
     } catch (error) {
@@ -171,14 +195,16 @@ const TeamPage = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg">Team Members</CardTitle>
-              <Button
-                size="sm"
-                onClick={() => setIsInviteModalOpen(true)}
-                className="bg-purple-600 hover:bg-purple-700"
-              >
-                <UserPlus className="h-4 w-4 mr-2" />
-                Invite
-              </Button>
+              {isTeamCreator && (
+                <Button
+                  size="sm"
+                  onClick={() => setIsInviteModalOpen(true)}
+                  className="bg-purple-600 hover:bg-purple-700"
+                >
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Invite
+                </Button>
+              )}
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -204,13 +230,14 @@ const TeamPage = () => {
                     </p>
                   </div>
                 </div>
-                {user?.email !== member.email && (
+                {isTeamCreator && user?.email !== member.email && (
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => handleRemoveClick(member)}
+                    className="text-red-500 hover:text-red-700 hover:bg-red-100"
                   >
-                    X
+                    <X className="h-4 w-4" />
                   </Button>
                 )}
               </div>
@@ -226,9 +253,12 @@ const TeamPage = () => {
 
       {/* Remove Member Dialog */}
       <Dialog open={isRemoveDialogOpen} onOpenChange={setIsRemoveDialogOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[425px]" aria-describedby="remove-member-description">
           <DialogHeader>
             <DialogTitle>Remove Team Member</DialogTitle>
+            <div id="remove-member-description">
+              Are you sure you want to remove {memberToRemove?.name} from the team?
+            </div>
           </DialogHeader>
           <div className="py-4">
             <p>
