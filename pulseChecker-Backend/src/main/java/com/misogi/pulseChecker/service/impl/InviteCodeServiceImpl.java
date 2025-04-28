@@ -48,7 +48,7 @@ public class InviteCodeServiceImpl implements IInviteCodeService{
 		if(inviteCode.getExpiresAt().isBefore(currentDateTime))
 			throw new BadRequestException("Invite Code Is Expired.");
 		TeamUser teamUser = new TeamUser();
-    	teamUser.setCreator(true);
+    	teamUser.setCreator(false);
     	teamUser.setTeam(inviteCode.getTeam());
     	teamUser.setUser(user);
     	teamUserRepository.save(teamUser);
