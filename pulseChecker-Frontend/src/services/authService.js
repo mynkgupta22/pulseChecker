@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://192.168.1.2:8081"; // Update this with your Spring Boot backend URL
+const API_URL = "https://pulsechecker.duckdns.org";// Update this with your Spring Boot backend URL
 
 // Create an axios instance with default config
 export const api = axios.create({
