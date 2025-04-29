@@ -69,7 +69,9 @@ const TeamDashboard = () => {
       }
     };
 
-    fetchData();
+    if(localStorage.getItem("user")) {
+      fetchData(); 
+    }
   }, [selectedTeam, selectedUser]);
 
   return (

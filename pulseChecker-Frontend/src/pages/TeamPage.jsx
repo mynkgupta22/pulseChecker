@@ -82,7 +82,9 @@ const TeamPage = () => {
 
   useEffect(() => {
     fetchTeamUsers();
-    fetchTeamDetails();
+    if(localStorage.getItem("user")) {
+      fetchTeamDetails();
+    }
   }, [teamId]);
 
   const handleRemoveClick = (member) => {

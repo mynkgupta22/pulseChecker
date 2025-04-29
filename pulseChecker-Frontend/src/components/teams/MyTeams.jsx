@@ -41,7 +41,9 @@ const MyTeams = () => {
   };
 
   useEffect(() => {
-    fetchTeams();
+    if(localStorage.getItem("user")) {
+      fetchTeams();  
+    }
   }, []);
 
   const handleManageTeam = (teamId) => {

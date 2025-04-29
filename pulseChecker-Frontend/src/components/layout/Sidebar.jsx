@@ -25,6 +25,7 @@ const Sidebar = () => {
   console.log(teams, "fff");
 
   useEffect(() => {
+    
     const fetchTeams = async () => {
       try {
         const teamData = await teamService.getTeamDetails();
@@ -36,8 +37,10 @@ const Sidebar = () => {
         setLoading(false);
       }
     };
-
-    fetchTeams();
+    if(localStorage.getItem("user")) {
+      fetchTeams();  
+    }
+    
   }, []);
 
   const navItems = [

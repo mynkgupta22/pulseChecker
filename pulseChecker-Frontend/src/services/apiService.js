@@ -1,4 +1,4 @@
-const API_URL = "http://192.168.1.2:8081";
+const API_URL = "https://pulsechecker.duckdns.org";
 
 class ApiService {
   constructor() {
